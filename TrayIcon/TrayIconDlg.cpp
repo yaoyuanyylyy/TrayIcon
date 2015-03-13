@@ -14,8 +14,8 @@
 
 CTrayIconDlg *g_AuE; // 把ShowBallon定义成全局函数，并用这个全局变量去与对话框关联，这样就可以在类外使用。
 									// 如果程序中还有其他类，要想在那些类中控制托盘图标的信息显示，就可以通过extern声明ShowBallon函数来实现。
-void ShowBallon(LPCTSTR szMsg="你好，ILLI，有新的消息提示，请查看!", 
-	LPCTSTR szTitle="提示消息", UINT uTimeout=5000, DWORD dwInfoFlgs=0x01);
+void ShowBallon(LPCTSTR szMsg=L"你好，ILLI，有新的消息提示，请查看!", 
+	LPCTSTR szTitle=L"提示消息", UINT uTimeout=5000, DWORD dwInfoFlgs=0x01);
 
 void ShowBallon(LPCTSTR szMsg, LPCTSTR szTitle, UINT uTimeout, DWORD dwInfoFlags)
 {
@@ -125,7 +125,7 @@ BOOL CTrayIconDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 
 	//ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);   // 加上此句，则应用程序不能显示最小化按钮，因此不能最小化到托盘
-	m_menu.LoadMenuA(IDR_TRAYMENU); // 载入自定义的托盘右键菜单
+	m_menu.LoadMenu(IDR_TRAYMENU); // 载入自定义的托盘右键菜单
 	g_AuE = (CTrayIconDlg*)this;  // 初始化全局变量
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -204,7 +204,7 @@ int CTrayIconDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_nid.dwInfoFlags = (DWORD)0x01; // None=0x00, Info=0x01, Warning=0x02, Error=0x03
 	m_nid.uCallbackMessage = WM_TRAYICON;  // 托盘消息关联，以便让托盘图标可以响应消息
 	m_nid.hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME));
-	lstrcpy(m_nid.szTip, "托盘图标提示消息");
+	lstrcpy(m_nid.szTip, L"托盘图标提示消息");
 	Shell_NotifyIcon(NIM_ADD, &m_nid); // Add=0x00, Delete=0x02, Modify=0x01;
 
 	return 0;
@@ -240,7 +240,7 @@ void CTrayIconDlg::OnAbout()
 void CTrayIconDlg::OnExit()
 {
 	// TODO: 在此添加命令处理程序代码
-	if(MessageBox("确定要退出应用程序吗？", "系统提示", MB_OKCANCEL | MB_ICONQUESTION) != 1)
+	if(MessageBox(L"确定要退出应用程序吗？", L"系统提示", MB_OKCANCEL | MB_ICONQUESTION) != 1)
 		return;
 	Shell_NotifyIcon(NIM_DELETE, &m_nid);
 	CDialogEx::OnCancel();
@@ -275,7 +275,7 @@ LRESULT CTrayIconDlg::OnTrayIcon( WPARAM wParam, LPARAM lParam )
 			//AfxMessageBox("提示显示！");
 			break;
 		case NIN_BALLOONUSERCLICK:// 在消息框中单击鼠标左键、或者按下滚轮
-			AfxMessageBox("你单击了托盘图标消息提示！");
+			AfxMessageBox(L"你单击了托盘图标消息提示！");
 			break;
 		case NIN_BALLOONTIMEOUT:// 单击关闭，或者超时隐藏， 或者在提示框中单击右键
 			//AfxMessageBox("提示已超时！"); 
